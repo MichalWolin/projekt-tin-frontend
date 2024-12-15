@@ -1,24 +1,41 @@
-import logo from './logo.svg';
+import React from 'react';
 import './App.css';
+import { BrowserRouter as Router, Route, Routes, Link } from 'react-router-dom';
+import logo from "./logo.png";
 
 function App() {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <Router>
+      <div className="App">
+        <header>
+          <div className="logo-title">
+            <Link to="/">
+              <img src={logo} alt="logo" className="logo"></img>
+            </Link>
+            <h1 className="title">Turnieje Tenisowe</h1>
+          </div>
+          <nav>
+            <Link to="/" className="nav-button">Strona Główna</Link>
+            <Link to="/ranking" className="nav-button">Ranking</Link>
+            <Link to="/tournaments" className="nav-button">Turnieje</Link>
+            <Link to="/login" className="nav-button">Zaloguj się</Link>
+            <Link to="/register" className="nav-button">Zarejestruj się</Link>
+          </nav>
+        </header>
+        <main>
+          <Routes>
+            <Route path="/" element={<Home />} />
+            <Route path="/ranking" element={<Ranking />} />
+            <Route path="/tournaments" element={<Tournaments />} />
+            <Route path="/login" element={<Login />} />
+            <Route path="/register" element={<Register />} />
+          </Routes>
+        </main>
+        <footer>
+          <p>Made by Michał Woliński s29239</p>
+        </footer>
+      </div>
+    </Router>
   );
 }
 
