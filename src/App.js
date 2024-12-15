@@ -2,6 +2,11 @@ import React from 'react';
 import './App.css';
 import { BrowserRouter as Router, Route, Routes, Link } from 'react-router-dom';
 import logo from "./logo.png";
+import Home from "./Home";
+import Ranking from "./Ranking";
+import Tournaments from "./Tournaments";
+import Login from "./Login";
+import Register from "./Register";
 
 function App() {
   return (

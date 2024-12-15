@@ -41,6 +41,22 @@ nav {
   padding: 0 15px;
 }
 
+button {
+  width: 150px;
+  height: 40px;
+  background-color: #BEEE62;
+  border: 2px solid black;
+  font-size: 20px;
+  margin: 10px;
+  transition: 0.25s;
+}
+
+button:hover {
+  background-color: #70AE6E;
+  color: white;
+  cursor: pointer;
+}
+
 .logo-title {
   display: flex;
   align-items: center;
@@ -63,4 +79,52 @@ footer {
   display: flex;
   align-items: center;
   justify-content: center;
+}
+
+.div-align {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  font-size: 20px;
+}
+
+table, td, th {
+  border: 2px solid black;
+  border-collapse: collapse;
+  margin: 10px;
+  text-align: center;
+}
+
+th, td {
+  padding: 10px;
+  width: 200px;
+}
+
+th {
+  background-color: #BEEE62;
+}
+
+td {
+  background-color: #70AE6E;
+}
+
+input {
+  width: 150px;
+  height: 30px;
+  background-color: #BEEE62;
+  border: 2px solid black;
+  font-size: 20px;
+  text-align: center;
+}
+
+label {
+  margin: 5px;
+  font-size: 20px;
+}
+
+form {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
