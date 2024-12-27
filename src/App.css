@@ -109,13 +109,17 @@ td {
   background-color: #70AE6E;
 }
 
-input {
-  width: 150px;
+input, select {
+  width: 200px;
   height: 30px;
   background-color: #BEEE62;
   border: 2px solid black;
   font-size: 20px;
   text-align: center;
+}
+
+select {
+  font-size: 18px;
 }
 
 label {
