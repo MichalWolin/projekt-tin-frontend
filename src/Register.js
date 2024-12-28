@@ -12,39 +12,39 @@ function Register() {
 
   const handleLoginChange = (event) => {
     setLogin(event.target.value);
-  }
+  };
 
   const handlePasswordChange = (event) => {
     setPassword(event.target.value);
-  }
+  };
 
   const handleRepeatPasswordChange = (event) => {
     setRepeatPassword(event.target.value);
-  }
+  };
 
   const handleEmailChange = (event) => {
     setEmail(event.target.value);
-  }
+  };
 
   const handleRoleChange = (event) => {
     setRole(event.target.value);
-  }
+  };
 
   const handleNameChange = (event) => {
     setName(event.target.value);
-  }
+  };
 
   const handleSurnameChange = (event) => {
     setSurname(event.target.value);
-  }
+  };
 
   const handleBirthdateChange = (event) => {
     setBirthdate(event.target.value);
-  }
+  };
 
   const handleSubmit = (event) => {
     event.preventDefault();
-    fetch("http://localhost:3000/users", {
+    fetch("http://localhost:3000/users/register", {
       method: "POST",
       headers: {
         "Content-Type": "application/json"
