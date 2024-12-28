@@ -1,11 +1,68 @@
 import React, { useState } from 'react';
 
 function Register() {
-const [userType, setUserType] = useState('player');
+  const [login, setLogin] = useState('');
+  const [password, setPassword] = useState('');
+  const [repeatPassword, setRepeatPassword] = useState('');
+  const [email, setEmail] = useState('');
+  const [role, setRole] = useState('player');
+  const [name, setName] = useState('');
+  const [surname, setSurname] = useState('');
+  const [birthdate, setBirthdate] = useState('');
 
-const handleUserTypeChange = (event) => {
-  setUserType(event.target.value);
-};
+  const handleLoginChange = (event) => {
+    setLogin(event.target.value);
+  }
+
+  const handlePasswordChange = (event) => {
+    setPassword(event.target.value);
+  }
+
+  const handleRepeatPasswordChange = (event) => {
+    setRepeatPassword(event.target.value);
+  }
+
+  const handleEmailChange = (event) => {
+    setEmail(event.target.value);
+  }
+
+  const handleRoleChange = (event) => {
+    setRole(event.target.value);
+  }
+
+  const handleNameChange = (event) => {
+    setName(event.target.value);
+  }
+
+  const handleSurnameChange = (event) => {
+    setSurname(event.target.value);
+  }
+
+  const handleBirthdateChange = (event) => {
+    setBirthdate(event.target.value);
+  }
+
+  const handleSubmit = (event) => {
+    event.preventDefault();
+    fetch("http://localhost:3000/users", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({
+        "login": login,
+        "password": password,
+        "email": email,
+        "role": role,
+        "name": name,
+        "surname": surname,
+        "birthdate": birthdate
+      })
+    })
+    .then(response => response.json())
+    .then((data) => console.log("Player successfully registered", data))
+    .catch((error) => console.error("Error while registering player", error));
+  };
 
   return (
     <div className="div-align">
@@ -13,29 +70,29 @@ const handleUserTypeChange = (event) => {
       <form>
         {/* TODO: Walidacja */}
         <label>Login</label>
-        <input type="text" placeholder="Login" />
+        <input type="text" placeholder="Login" value={login} onChange={handleLoginChange} />
         <label>Hasło</label>
-        <input type="password" placeholder="Hasło" />
+        <input type="password" placeholder="Hasło" value={password} onChange={handlePasswordChange} />
         <label>Powtórz hasło</label>
-        <input type="password" placeholder="Powtórz hasło" />
+        <input type="password" placeholder="Powtórz hasło" value={repeatPassword} onChange={handleRepeatPasswordChange} />
         <label>E-mail</label>
-        <input type="text" placeholder="E-mail" />
+        <input type="text" placeholder="E-mail" value={email} onChange={handleEmailChange} />
         <label>Typ użytkownika</label>
-        <select name="role" onChange={handleUserTypeChange}>
+        <select name="role" onChange={handleRoleChange}>
           <option value="player">Gracz tenisa</option>
           <option value="manager">Menadżer turniejów</option>
         </select>
-        {userType === 'player' && (
+        {role === 'player' && (
           <>
             <label>Imię</label>
-            <input type="text" placeholder="Imię" />
+            <input type="text" placeholder="Imię" value={name} onChange={handleNameChange} />
             <label>Nazwisko</label>
-            <input type="text" placeholder="Nazwisko" />
+            <input type="text" placeholder="Nazwisko" value={surname} onChange={handleSurnameChange} />
             <label>Data urodzenia</label>
-            <input type="date" placeholder="Data urodzenia" />
+            <input type="date" placeholder="Data urodzenia" value={birthdate} onChange={handleBirthdateChange} />
           </>
         )}
-        <button type="submit">Zarejestruj</button>
+        <button onClick={handleSubmit}>Zarejestruj</button>
       </form>
     </div>
   );
