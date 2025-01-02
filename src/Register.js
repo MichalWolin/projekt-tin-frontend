@@ -9,6 +9,7 @@ function Register() {
   const [name, setName] = useState('');
   const [surname, setSurname] = useState('');
   const [birthdate, setBirthdate] = useState('');
+  const [gender, setGender] = useState('male');
 
   const handleLoginChange = (event) => {
     setLogin(event.target.value);
@@ -42,6 +43,10 @@ function Register() {
     setBirthdate(event.target.value);
   };
 
+  const handleGenderChange = (event) => {
+    setGender(event.target.value);
+  };
+
   const handleSubmit = (event) => {
     event.preventDefault();
     fetch("http://localhost:3000/users/register", {
@@ -56,7 +61,8 @@ function Register() {
         "role": role,
         "name": name,
         "surname": surname,
-        "birthdate": birthdate
+        "birthdate": birthdate,
+        "gender": gender
       })
     })
     .then(response => response.json())
@@ -90,6 +96,11 @@ function Register() {
             <input type="text" placeholder="Nazwisko" value={surname} onChange={handleSurnameChange} />
             <label>Data urodzenia</label>
             <input type="date" placeholder="Data urodzenia" value={birthdate} onChange={handleBirthdateChange} />
+            <label>Płeć</label>
+            <select name="gender" onChange={handleGenderChange}>
+              <option value="male">Mężczyzna</option>
+              <option value="female">Kobieta</option>
+            </select>
           </>
         )}
         <button onClick={handleSubmit}>Zarejestruj</button>
