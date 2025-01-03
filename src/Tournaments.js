@@ -16,7 +16,7 @@ function Tournaments() {
           <td>Wielka Brytania</td>
         </tr>
     </table>
-    <button>Szczegóły</button>
+    <button className="form-button">Szczegóły</button>
     <table>
       <tr>
         <th>Nazwa</th>
@@ -31,7 +31,7 @@ function Tournaments() {
         <td>Stany Zjednoczone</td>
       </tr>
     </table>
-    <button>Szczegóły</button>
+    <button className="form-button">Szczegóły</button>
     </div>
   );
 }

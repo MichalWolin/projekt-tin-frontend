@@ -1,8 +1,10 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import { useCookies } from 'react-cookie';
 import { useNavigate } from 'react-router-dom';
 import './App.css';
 
 function Register() {
+  const [cookies] = useCookies(['user']);
   const [login, setLogin] = useState('');
   const [password, setPassword] = useState('');
   const [repeatPassword, setRepeatPassword] = useState('');
@@ -14,6 +16,12 @@ function Register() {
   const [gender, setGender] = useState('male');
   const [successMessage, setSuccessMessage] = useState('');
   const navigate = useNavigate();
+
+  useEffect(() => {
+    if (cookies.user && cookies.user.role !== 'guest') {
+      navigate("/");
+    }
+  }, [cookies.user, navigate]);
 
   const handleLoginChange = (event) => {
     setLogin(event.target.value);
@@ -112,7 +120,7 @@ function Register() {
             </select>
           </>
         )}
-        <button onClick={handleSubmit}>Zarejestruj</button>
+        <button className="form-button" onClick={handleSubmit}>Zarejestruj</button>
         <p className="success-message">{successMessage}</p>
       </form>
     </div>

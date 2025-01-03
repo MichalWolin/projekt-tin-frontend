@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import './App.css';
 import { BrowserRouter as Router, Route, Routes, Link } from 'react-router-dom';
 import logo from "./logo.png";
@@ -10,11 +10,17 @@ import Register from "./Register";
 import { useCookies } from "react-cookie";
 
 function App() {
-  const [cookies, setCookie] = useCookies(['user']);
+  const [cookies, setCookie, removeCookie] = useCookies(['user']);
 
-  if (!cookies.user) {
-    setCookie('user', { role: 'guest' }, { path: '/' });
-  }
+  const handleLogout = () => {
+    removeCookie('user', { path: '/' });
+  };
+
+  useEffect(() => {
+    if (!cookies.user) {
+      setCookie('user', { role: 'guest' }, { path: '/' });
+    }
+  }, [cookies.user, setCookie]);
 
   return (
     <Router>
@@ -30,8 +36,17 @@ function App() {
             <Link to="/" className="nav-button">Strona Główna</Link>
             <Link to="/ranking" className="nav-button">Ranking</Link>
             <Link to="/tournaments" className="nav-button">Turnieje</Link>
-            <Link to="/login" className="nav-button">Zaloguj się</Link>
-            <Link to="/register" className="nav-button">Zarejestruj się</Link>
+            
+            {!cookies.user || cookies.user.role === 'guest' ? (
+              <>
+                <Link to="/login" className="nav-button">Zaloguj się</Link>
+                <Link to="/register" className="nav-button">Zarejestruj się</Link>
+              </>
+            ) : (
+              <>
+                <button className="nav-button" onClick={handleLogout}>Wyloguj się</button>
+              </>
+            )}
           </nav>
         </header>
         <main>

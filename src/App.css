@@ -25,6 +25,10 @@ nav {
 }
 
 .nav-button {
+  background-color: #BEEE62;
+  font-size: inherit;
+  margin: 0;
+  border: 0;
   text-decoration: none;
   color: black;
   padding: 0 15px;
@@ -39,9 +43,10 @@ nav {
   color: white;
   height: 100%;
   padding: 0 15px;
+  cursor: pointer;
 }
 
-button {
+.form-button {
   width: 150px;
   height: 40px;
   background-color: #BEEE62;
@@ -51,7 +56,7 @@ button {
   transition: 0.25s;
 }
 
-button:hover {
+.form-button:hover {
   background-color: #70AE6E;
   color: white;
   cursor: pointer;

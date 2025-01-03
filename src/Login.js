@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useCookies } from "react-cookie";
 
@@ -9,6 +9,13 @@ function Login() {
   const [successMessage, setSuccessMessage] = useState('');
   const [errorMessage, setErrorMessage] = useState('');
   const navigate = useNavigate();
+
+  //Pytania: Czy tak moze byc czy poprawic (zabezpieczyc Routes??)
+  useEffect(() => {
+    if (cookies.user && cookies.user.role !== 'guest') {
+      navigate("/");
+    }
+  }, [cookies.user, navigate]);
 
   const handleLoginChange = (event) => {
     setLogin(event.target.value);
@@ -48,10 +55,10 @@ function Login() {
         if (data) {
           setSuccessMessage("Pomyślnie zalogowano.");
           const user = data.user[0];
-          setCookie('user', { id: user.id, role: user.role }, { path: '/', maxAge: 10 });
+          setCookie('user', { id: user.id, role: user.role }, { path: '/', maxAge: 3600 });
           setTimeout(() => {
             navigate("/");
-          }, 5000);
+          }, 0);
         }
       })
       .catch((error) => {
@@ -68,7 +75,7 @@ function Login() {
           <input type="text" placeholder="Login" value={login} onChange={handleLoginChange} />
           <label>Hasło</label>
           <input type="password" placeholder="Hasło" value={password} onChange={handlePasswordChange} />
-          <button onClick={handleSubmit}>Zaloguj</button>
+          <button className="form-button" onClick={handleSubmit}>Zaloguj</button>
           <p className="success-message">{successMessage}</p>
           <p className="error-message">{errorMessage}</p>
         </form>
