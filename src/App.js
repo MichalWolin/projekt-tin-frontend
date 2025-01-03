@@ -7,6 +7,7 @@ import Ranking from "./Ranking";
 import Tournaments from "./Tournaments";
 import Login from "./Login";
 import Register from "./Register";
+import Profile from "./Profile";
 import { useCookies } from "react-cookie";
 
 function App() {
@@ -37,16 +38,18 @@ function App() {
             <Link to="/ranking" className="nav-button">Ranking</Link>
             <Link to="/tournaments" className="nav-button">Turnieje</Link>
             
-            {!cookies.user || cookies.user.role === 'guest' ? (
+            {(!cookies.user || cookies.user.role === 'guest') && 
               <>
                 <Link to="/login" className="nav-button">Zaloguj się</Link>
                 <Link to="/register" className="nav-button">Zarejestruj się</Link>
               </>
-            ) : (
+            }
+            {cookies.user && cookies.user.role === 'player' &&
               <>
+                <Link to={`/profile/${cookies.user.id}`} className="nav-button">Profil</Link>
                 <button className="nav-button" onClick={handleLogout}>Wyloguj się</button>
               </>
-            )}
+            }
           </nav>
         </header>
         <main>
@@ -56,6 +59,7 @@ function App() {
             <Route path="/tournaments" element={<Tournaments />} />
             <Route path="/login" element={<Login />} />
             <Route path="/register" element={<Register />} />
+            <Route path="/profile/:id" element={<Profile />} />
           </Routes>
         </main>
         <footer>
