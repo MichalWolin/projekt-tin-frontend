@@ -1,4 +1,6 @@
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import './App.css';
 
 function Register() {
   const [login, setLogin] = useState('');
@@ -10,6 +12,8 @@ function Register() {
   const [surname, setSurname] = useState('');
   const [birthdate, setBirthdate] = useState('');
   const [gender, setGender] = useState('male');
+  const [successMessage, setSuccessMessage] = useState('');
+  const navigate = useNavigate();
 
   const handleLoginChange = (event) => {
     setLogin(event.target.value);
@@ -66,7 +70,12 @@ function Register() {
       })
     })
     .then(response => response.json())
-    .then((data) => console.log("Player successfully registered", data))
+    .then((data) => {
+      setSuccessMessage("Pomyślnie zarejestrowano użytkownika.");
+      setTimeout(() => {
+        navigate("/");
+      }, 5000);
+    })
     .catch((error) => console.error("Error while registering player", error));
   };
 
@@ -104,6 +113,7 @@ function Register() {
           </>
         )}
         <button onClick={handleSubmit}>Zarejestruj</button>
+        <p className="success-message">{successMessage}</p>
       </form>
     </div>
   );

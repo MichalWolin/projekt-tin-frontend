@@ -1,8 +1,14 @@
 import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { useCookies } from "react-cookie";
 
 function Login() {
+  const [cookies, setCookie] = useCookies(['user']);
   const [login, setLogin] = useState('');
   const [password, setPassword] = useState('');
+  const [successMessage, setSuccessMessage] = useState('');
+  const [errorMessage, setErrorMessage] = useState('');
+  const navigate = useNavigate();
 
   const handleLoginChange = (event) => {
     setLogin(event.target.value);
@@ -14,6 +20,9 @@ function Login() {
 
   const handleSubmit = (event) => {
     event.preventDefault();
+    setSuccessMessage('');
+    setErrorMessage('');
+
     fetch("http://localhost:3000/users/login", {
       method: "POST",
       headers: {
@@ -24,9 +33,31 @@ function Login() {
         "password": password
       })
     })
-      .then(response => response.json())
-      .then((data) => console.log(data))
-      .catch((error) => console.log(error));
+      .then(response => {
+        if (response.status === 200) {
+          return response.json();
+        } else if (response.status === 401) {
+          setErrorMessage("Nieprawidłowy login lub hasło.");
+          return null;
+        } else {
+          setErrorMessage("Wystąpił nieoczekiwany błąd.");
+          return null;
+        }
+      })
+      .then((data) => {
+        if (data) {
+          setSuccessMessage("Pomyślnie zalogowano.");
+          const user = data.user[0];
+          setCookie('user', { id: user.id, role: user.role }, { path: '/', maxAge: 10 });
+          setTimeout(() => {
+            navigate("/");
+          }, 5000);
+        }
+      })
+      .catch((error) => {
+        console.log(error);
+        setErrorMessage("Błąd połączenia z serwerem.")
+      });
   };
 
   return (
@@ -38,6 +69,8 @@ function Login() {
           <label>Hasło</label>
           <input type="password" placeholder="Hasło" value={password} onChange={handlePasswordChange} />
           <button onClick={handleSubmit}>Zaloguj</button>
+          <p className="success-message">{successMessage}</p>
+          <p className="error-message">{errorMessage}</p>
         </form>
     </div>
   );

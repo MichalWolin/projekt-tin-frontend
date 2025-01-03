@@ -7,8 +7,15 @@ import Ranking from "./Ranking";
 import Tournaments from "./Tournaments";
 import Login from "./Login";
 import Register from "./Register";
+import { useCookies } from "react-cookie";
 
 function App() {
+  const [cookies, setCookie] = useCookies(['user']);
+
+  if (!cookies.user) {
+    setCookie('user', { role: 'guest' }, { path: '/' });
+  }
+
   return (
     <Router>
       <div className="App">
@@ -37,7 +44,8 @@ function App() {
           </Routes>
         </main>
         <footer>
-          <p>Made by Michał Woliński s29239</p>
+          {/* <p>Made by Michał Woliński s29239</p> */}
+          <p>Twoja rola: {cookies.user ? cookies.user.role : 'guest'}</p>
         </footer>
       </div>
     </Router>
