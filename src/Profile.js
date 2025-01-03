@@ -9,7 +9,7 @@ function Profile() {
   const [playerData, setPlayerData] = useState(null);
 
   useEffect(() => {
-    fetch(`http://localhost:3000/users/profile/${id}`, {
+    fetch(`http://localhost:3000/players/profile/${id}`, {
       method: "GET"
     })
     .then(response => {

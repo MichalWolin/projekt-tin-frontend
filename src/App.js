@@ -8,6 +8,8 @@ import Tournaments from "./Tournaments";
 import Login from "./Login";
 import Register from "./Register";
 import Profile from "./Profile";
+import Settings from "./Settings";
+import EditData from "./EditData";
 import { useCookies } from "react-cookie";
 
 function App() {
@@ -35,7 +37,7 @@ function App() {
           </div>
           <nav>
             <Link to="/" className="nav-button">Strona Główna</Link>
-            <Link to="/ranking" className="nav-button">Ranking</Link>
+            {/* <Link to="/ranking" className="nav-button">Ranking</Link> */}
             <Link to="/tournaments" className="nav-button">Turnieje</Link>
             
             {(!cookies.user || cookies.user.role === 'guest') && 
@@ -47,6 +49,11 @@ function App() {
             {cookies.user && cookies.user.role === 'player' &&
               <>
                 <Link to={`/profile/${cookies.user.id}`} className="nav-button">Profil</Link>
+              </>
+            }
+            {cookies.user && (cookies.user.role === 'player' || cookies.user.role === 'manager') &&
+              <>
+                <Link to="/settings" className="nav-button">Ustawienia</Link>
                 <button className="nav-button" onClick={handleLogout}>Wyloguj się</button>
               </>
             }
@@ -60,6 +67,9 @@ function App() {
             <Route path="/login" element={<Login />} />
             <Route path="/register" element={<Register />} />
             <Route path="/profile/:id" element={<Profile />} />
+            <Route path="/settings" element={<Settings />} />
+            <Route path="/settings/edit-data" element={<EditData />} /> 
+            <Route path="*" element={<p className="error-message">404 - Nie znaleziono strony</p>} />
           </Routes>
         </main>
         <footer>
