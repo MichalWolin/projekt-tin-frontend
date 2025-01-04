@@ -70,7 +70,7 @@ function App() {
         <Routes>
           <Route path="/" element={<Home />} />
           {/* <Route path="/ranking" element={<Ranking />} /> */}
-          {/* <Route path="/tournaments" element={<Tournaments />} /> */}
+          <Route path="/tournaments" element={<Tournaments />} />
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
           <Route path="/profile/:id" element={<Profile />} />
