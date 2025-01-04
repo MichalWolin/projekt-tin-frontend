@@ -3,7 +3,7 @@ import { useCookies } from 'react-cookie';
 import { useParams } from 'react-router-dom';
 
 function Profile() {
-  const [cookies] = useCookies(['user']);
+  // const [cookies] = useCookies(['user']);
   const { id } = useParams();
   const [errorMessage, setErrorMessage] = useState('');
   const [playerData, setPlayerData] = useState(null);
@@ -36,6 +36,7 @@ function Profile() {
 
   const formatDate = (date) => {
     const dateObj = new Date(date);
+    
     const day = String(dateObj.getDate()).padStart(2, '0');
     const month = String(dateObj.getMonth() + 1).padStart(2, '0');
     const year = dateObj.getFullYear();
