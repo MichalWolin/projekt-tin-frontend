@@ -71,47 +71,49 @@ function Tournaments() {
     });
   };
 
+  const handleEditTournament = (id) => {
+    navigate(`/tournaments/edit-tournament/${id}`);
+  };
+
   return (
     <div className="div-align">
       <h2>Nadchodzące turnieje</h2>
       <p className="error-message">{errorMessage}</p>
       {tournaments && 
         <>
-          <div className="div-align">
-            {tournaments.map((tournament) => (
-              <>
-                <table>
-                  <tr>
-                    <th>Nazwa</th>
-                    <th>Data rozpoczęcia</th>
-                    <th>Data zakończenia</th>
-                    <th>Płeć</th>
-                  </tr>
-                  <tr>
-                    <td>{tournament.name}</td>
-                    <td>{formatDate(tournament.start_date)}</td>
-                    <td>{formatDate(tournament.end_date)}</td>
-                    <td>{tournament.gender}</td>
-                  </tr>
-                </table>
-                <div>
-                  <button className="form-button">Mecze</button>
-                  {cookies.user && cookies.user.role === 'player' &&
-                    <button className="form-button">Zapisz się</button>
-                  }
-                  {cookies.user && cookies.user.role === 'manager' && cookies.user.id === tournament.manager_id &&
-                    <>
-                      <button className="form-button">Edytuj</button>
-                      <button className="form-button" onClick={() => handleRemoveTournament(tournament.id)}>Usuń</button>
-                    </>
-                  }
-                </div>
-              </>
-            ))}
-            <div>
-              <button className="form-button" onClick={() => setPage(page - 1)} disabled={page === 1}>Poprzednia</button>
-              <button className="form-button" onClick={() => setPage(page + 1)} disabled={!hasNextPage}>Następna</button>
+          {tournaments.map((tournament) => (
+            <div key={tournament.id} className="div-align">
+              <table>
+                <tr>
+                  <th>Nazwa</th>
+                  <th>Data rozpoczęcia</th>
+                  <th>Data zakończenia</th>
+                  <th>Płeć</th>
+                </tr>
+                <tr>
+                  <td>{tournament.name}</td>
+                  <td>{formatDate(tournament.start_date)}</td>
+                  <td>{formatDate(tournament.end_date)}</td>
+                  <td>{tournament.gender}</td>
+                </tr>
+              </table>
+              <div>
+                <button className="form-button">Mecze</button>
+                {cookies.user && cookies.user.role === 'player' &&
+                  <button className="form-button">Zapisz się</button>
+                }
+                {cookies.user && cookies.user.role === 'manager' && cookies.user.id === tournament.manager_id &&
+                  <>
+                    <button className="form-button" onClick={() => handleEditTournament(tournament.id)}>Edytuj</button>
+                    <button className="form-button" onClick={() => handleRemoveTournament(tournament.id)}>Usuń</button>
+                  </>
+                }
+              </div>
             </div>
+          ))}
+          <div>
+            <button className="form-button" onClick={() => setPage(page - 1)} disabled={page === 1}>Poprzednia</button>
+            <button className="form-button" onClick={() => setPage(page + 1)} disabled={!hasNextPage}>Następna</button>
           </div>
         </>
       }
