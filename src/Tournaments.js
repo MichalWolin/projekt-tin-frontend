@@ -27,10 +27,15 @@ function Tournaments() {
       if (data) {
         setTournaments(data.tournaments);
         setHasNextPage(data.hasNextPage);
-      } else {
-        setErrorMessage("Brak nadchodzących turniejów.");
+      } 
+      if (data.tournaments.length === 0) {
+        setErrorMessage("Brak nadcelse nadchodzących turniejów.");
       }
     })
+    .catch((error) => {
+      console.log(error);
+      setErrorMessage('Błąd połączenia z serwerem.');
+    });
   };
 
   useEffect(() => {
@@ -75,12 +80,17 @@ function Tournaments() {
     navigate(`/tournaments/edit-tournament/${id}`);
   };
 
+  const handleMatches = (id) => {
+    navigate(`/tournaments/matches/${id}`);
+  };
+
   return (
     <div className="div-align">
       <h2>Nadchodzące turnieje</h2>
       <p className="error-message">{errorMessage}</p>
       {tournaments && 
         <>
+          {/* Pytania: Dlaczego <tr> nie moze byc dzieckiem <table>? */}
           {tournaments.map((tournament) => (
             <div key={tournament.id} className="div-align">
               <table>
@@ -98,10 +108,7 @@ function Tournaments() {
                 </tr>
               </table>
               <div>
-                <button className="form-button">Mecze</button>
-                {cookies.user && cookies.user.role === 'player' &&
-                  <button className="form-button">Zapisz się</button>
-                }
+                <button className="form-button" onClick={() => handleMatches(tournament.id)}>Mecze</button>
                 {cookies.user && cookies.user.role === 'manager' && cookies.user.id === tournament.manager_id &&
                   <>
                     <button className="form-button" onClick={() => handleEditTournament(tournament.id)}>Edytuj</button>
