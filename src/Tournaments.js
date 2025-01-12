@@ -90,7 +90,6 @@ function Tournaments() {
       <p className="error-message">{errorMessage}</p>
       {tournaments && 
         <>
-          {/* Pytania: Dlaczego <tr> nie moze byc dzieckiem <table>? */}
           {tournaments.map((tournament) => (
             <div key={tournament.id} className="div-align">
               <table>

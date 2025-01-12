@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useCookies } from 'react-cookie';
-import { useParams } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
+import Match from './Match';
 
 function Matches() {
   const { id } = useParams();
@@ -10,6 +11,7 @@ function Matches() {
   const [hasNextPage, setHasNextPage] = useState(true);
   const [page, setPage] = useState(1);
   const [managerId, setManagerId] = useState(null);
+  const navigate = useNavigate();
 
   const fetchMatches = () => {
     fetch(`http://localhost:3000/matches/${id}?page=${page}`, {
@@ -33,6 +35,10 @@ function Matches() {
         setErrorMessage("Brak meczów.");
       }
     })
+    .catch((error) => {
+      console.log(error);
+      setErrorMessage('Błąd połączenia z serwerem.');
+    });
   };
 
   const fetchManagerId = () => {
@@ -69,13 +75,8 @@ function Matches() {
     fetchManagerId();
   }, []);
 
-  const formatDate = (date) => {
-    const dateObj = new Date(date);
-    
-    const day = String(dateObj.getDate()).padStart(2, '0');
-    const month = String(dateObj.getMonth() + 1).padStart(2, '0');
-    const year = dateObj.getFullYear();
-    return `${day}.${month}.${year}`;
+  const handleAddMatch = () => {
+    navigate(`/tournaments/add-match/${id}`);
   };
 
   return (
@@ -86,47 +87,7 @@ function Matches() {
         <>
           {/* Pytania: Czy to do oddzielnego komponentu? */}
           {matches.map((match) => (
-            <div key={match.id} className="div-align">
-              <table>
-                <tr>
-                  <th>Data</th>
-                  <th>Zawodnicy</th>
-                  <th>Set 1</th>
-                  <th>Set 2</th>
-                  <th>Set 3</th>
-                </tr>
-                <tr>
-                  <td rowspan="2">{formatDate(match.date)}</td>
-                  <th>{match.player_1_id}</th>
-                  {match.set1 &&
-                    <>
-                      <td>{match.set1.split(':')[0]}</td>
-                      <td>{match.set2.split(':')[0]}</td>
-                      <td>{match.set3.split(':')[0]}</td>
-                    </>
-                  }
-                  {!match.set1 &&
-                    <td rowspan="2" colspan="3">Mecz się jeszcze nie odbył</td>
-                  }
-                </tr>
-                <tr>
-                  <th>{match.player_2_id}</th>
-                  {match.set1 &&
-                    <>
-                      <td>{match.set1.split(':')[1]}</td>
-                      <td>{match.set2.split(':')[1]}</td>
-                      <td>{match.set3.split(':')[1]}</td>
-                    </>
-                  }
-                </tr>
-              </table>
-              {cookies.user && cookies.user.role === 'manager' && managerId === cookies.user.id &&
-                <div>
-                  <button className="form-button">Edytuj mecz</button>
-                  <button className="form-button">Usuń mecz</button>
-                </div>
-              }
-            </div>
+            <Match match={match} managerId={managerId}/>
           ))}
           {!errorMessage &&
             <div>
@@ -138,7 +99,7 @@ function Matches() {
       }
       {cookies.user && cookies.user.role === 'manager' &&
         <>
-          <button className="form-button">Dodaj mecz</button>
+          <button className="form-button" onClick={handleAddMatch}>Dodaj mecz</button>
         </>
       }
       {/* <p className="success-message">{successMessage}</p> */}

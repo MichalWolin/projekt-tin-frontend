@@ -1,6 +1,5 @@
 import React, { useEffect } from 'react';
 import './App.css';
-//Pytania: Dlaczego jak usune Router to jest error?
 import { BrowserRouter as Router, Route, Routes, Link } from 'react-router-dom';
 import logo from "./logo.png";
 import Home from "./Home";
@@ -16,6 +15,7 @@ import DeleteAccount from './DeleteAccount';
 import AddTournament from './AddTournament';
 import EditTournament from './EditTournament';
 import Matches from './Matches';
+import AddMatch from './AddMatch';
 import { useCookies } from "react-cookie";
 import { useNavigate } from 'react-router-dom';
 
@@ -84,6 +84,7 @@ function App() {
           <Route path="/tournaments/add-tournament" element={<AddTournament />} />
           <Route path="/tournaments/edit-tournament/:id" element={<EditTournament />} />
           <Route path="/tournaments/matches/:id" element={<Matches />} />
+          <Route path="/tournaments/add-match/:id" element={<AddMatch />} />
           <Route path="*" element={<p className="error-message">404 - Nie znaleziono strony</p>} />
         </Routes>
       </main>

@@ -10,7 +10,6 @@ function Login() {
   const [errorMessage, setErrorMessage] = useState('');
   const navigate = useNavigate();
 
-  //Pytania: Czy tak moze byc czy poprawic (zabezpieczyc Routes??)
   useEffect(() => {
     if (cookies.user && cookies.user.role !== 'guest') {
       navigate("/");
