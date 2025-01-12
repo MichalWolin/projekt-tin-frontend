@@ -10,8 +10,6 @@ function EditData() {
   const [surname, setSurname] = useState('');
   const [birthdate, setBirthdate] = useState('');
 
-  //TODO: jak sie wyloguje edytujac dane to error bo ciasteczko przestaje istniec
-
   useEffect(() => {
     fetch(`http://localhost:3000/users/data/${cookies.user.id}`, {
       method: "GET"
