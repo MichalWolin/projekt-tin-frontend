@@ -14,6 +14,7 @@ import ChangePassword from './ChangePassword';
 import DeleteAccount from './DeleteAccount';
 import AddTournament from './AddTournament';
 import EditTournament from './EditTournament';
+import EditMatch from './EditMatch';
 import Matches from './Matches';
 import AddMatch from './AddMatch';
 import { useCookies } from "react-cookie";
@@ -85,6 +86,7 @@ function App() {
           <Route path="/tournaments/edit-tournament/:id" element={<EditTournament />} />
           <Route path="/tournaments/matches/:id" element={<Matches />} />
           <Route path="/tournaments/add-match/:id" element={<AddMatch />} />
+          <Route path="/matches/edit-match/:id" element={<EditMatch />} />
           <Route path="*" element={<p className="error-message">404 - Nie znaleziono strony</p>} />
         </Routes>
       </main>

@@ -7,6 +7,7 @@ function Matches() {
   const { id } = useParams();
   const [cookies] = useCookies(['user']);
   const [errorMessage, setErrorMessage] = useState('');
+  const [successMessage, setSuccessMessage] = useState('');
   const [matches, setMatches] = useState(null);
   const [hasNextPage, setHasNextPage] = useState(true);
   const [page, setPage] = useState(1);
@@ -79,6 +80,27 @@ function Matches() {
     navigate(`/tournaments/add-match/${id}`);
   };
 
+  const handleRemoveMatch = (id) => {
+    fetch(`http://localhost:3000/matches/${id}`, {
+      method: "DELETE"
+    })
+    .then(response => {
+      if (response.status === 200) {
+        setSuccessMessage("Mecz został usunięty.");
+        fetchMatches();
+        setTimeout(() => {
+          setSuccessMessage('');
+        }, 5000);
+      } else {
+        setErrorMessage("Wystąpił nieoczekiwany błąd.");
+      }
+    })
+    .catch((error) => {
+      console.log(error);
+      setErrorMessage("Błąd połączenia z serwerem.");
+    });
+  };
+
   return (
     <div className="div-align">
       <h2>Mecze</h2>
@@ -87,7 +109,7 @@ function Matches() {
         <>
           {/* Pytania: Czy to do oddzielnego komponentu? */}
           {matches.map((match) => (
-            <Match match={match} managerId={managerId}/>
+            <Match match={match} managerId={managerId} handleRemoveMatch={handleRemoveMatch} />
           ))}
           {!errorMessage &&
             <div>
@@ -102,7 +124,7 @@ function Matches() {
           <button className="form-button" onClick={handleAddMatch}>Dodaj mecz</button>
         </>
       }
-      {/* <p className="success-message">{successMessage}</p> */}
+      <p className="success-message">{successMessage}</p>
     </div>
   );
 }

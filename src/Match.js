@@ -1,8 +1,10 @@
 import React from 'react';
 import { useCookies } from 'react-cookie';
+import { useNavigate } from 'react-router-dom';
 
-function Match({ match, managerId }) {
+function Match({ match, managerId, handleRemoveMatch }) {
   const [cookies] = useCookies(['user']);
+  const navigate = useNavigate();
 
   const formatDate = (date) => {
     const dateObj = new Date(date);
@@ -11,6 +13,10 @@ function Match({ match, managerId }) {
     const month = String(dateObj.getMonth() + 1).padStart(2, '0');
     const year = dateObj.getFullYear();
     return `${day}.${month}.${year}`;
+  };
+
+  const handleEditMatch = (id) => {
+    navigate(`/matches/edit-match/${id}`);
   };
 
   return (
@@ -50,8 +56,8 @@ function Match({ match, managerId }) {
     </table>
     {cookies.user && cookies.user.role === 'manager' && managerId === cookies.user.id &&
       <div>
-        <button className="form-button">Edytuj mecz</button>
-        <button className="form-button">Usuń mecz</button>
+        <button className="form-button" onClick={() => handleEditMatch(match.id)}>Edytuj mecz</button>
+        <button className="form-button" onClick={() => handleRemoveMatch(match.id)}>Usuń mecz</button>
       </div>
     }
   </div>
