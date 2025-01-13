@@ -48,7 +48,7 @@ function App() {
         </div>
         <nav>
           <Link to="/" className="nav-button">Strona Główna</Link>
-          {/* <Link to="/ranking" className="nav-button">Ranking</Link> */}
+          <Link to="/ranking" className="nav-button">Ranking</Link>
           <Link to="/tournaments" className="nav-button">Turnieje</Link>
           
           {(!cookies.user || cookies.user.role === 'guest') && 
@@ -73,7 +73,7 @@ function App() {
       <main>
         <Routes>
           <Route path="/" element={<Home />} />
-          {/* <Route path="/ranking" element={<Ranking />} /> */}
+          <Route path="/ranking" element={<Ranking />} />
           <Route path="/tournaments" element={<Tournaments />} />
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />

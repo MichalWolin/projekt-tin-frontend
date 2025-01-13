@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useCookies } from 'react-cookie';
 import { useParams, useNavigate } from 'react-router-dom';
+import Match from './Match';
 
 function Profile() {
   const [cookies] = useCookies(['user']);
@@ -9,6 +10,9 @@ function Profile() {
   const [playerData, setPlayerData] = useState(null);
   const navigate = useNavigate();
   const [loading, setLoading] = useState(true);
+  const [matches, setMatches] = useState(null);
+  const [hasNextPage, setHasNextPage] = useState(true);
+  const [page, setPage] = useState(1);
 
   useEffect(() => {
     if (!loading) {
@@ -46,6 +50,34 @@ function Profile() {
       setErrorMessage("Błąd połączenia z serwerem.")
     });
   }, [id]);
+
+  useEffect(() => {
+    fetch(`http://localhost:3000/players/matches/${id}?page=${page}`, {
+      method: "GET"
+    })
+    .then(response => {
+      if (response.status === 200) {
+        return response.json();
+      } else {
+        setErrorMessage("Wystąpił nieoczekiwany błąd.");
+        return null;
+      }
+    })
+    .then((data) => {
+      if (data) {
+        setMatches(data.matches);
+        setHasNextPage(data.hasNextPage);
+      } 
+      
+      if (data.matches.length === 0) {
+        setErrorMessage("Brak meczów.");
+      }
+    })
+    .catch((error) => {
+      console.log(error);
+      setErrorMessage('Błąd połączenia z serwerem.');
+    });
+  }, [page]);
 
   const formatDate = (date) => {
     const dateObj = new Date(date);
@@ -85,6 +117,16 @@ function Profile() {
             </tr>
           </table>
         </>
+      }
+      <h3>Twoje mecze</h3>
+      {matches && matches.map((match) => 
+        <Match match={match} />
+      )}
+      {!errorMessage &&
+        <div>
+          <button className="form-button" onClick={() => setPage(page - 1)} disabled={page === 1}>Poprzednia</button>
+          <button className="form-button" onClick={() => setPage(page + 1)} disabled={!hasNextPage}>Następna</button>
+        </div>
       }
     </div>
   );
