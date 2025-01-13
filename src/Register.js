@@ -91,7 +91,6 @@ function Register() {
     <div className="div-align">
       <h2>Zarejestruj się</h2>
       <form>
-        {/* TODO: Walidacja */}
         <label>Login</label>
         <input type="text" placeholder="Login" value={login} onChange={handleLoginChange} />
         <label>Hasło</label>

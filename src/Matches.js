@@ -107,7 +107,6 @@ function Matches() {
       <p className="error-message">{errorMessage}</p>
       {matches &&
         <>
-          {/* Pytania: Czy to do oddzielnego komponentu? */}
           {matches.map((match) => (
             <Match match={match} managerId={managerId} handleRemoveMatch={handleRemoveMatch} />
           ))}
