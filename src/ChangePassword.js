@@ -55,7 +55,7 @@ function ChangePassword() {
       setRepeatNewPasswordError('To pole jest wymagane.');
       error = true;
     }
-    //check for spaces
+
     if (/\s/.test(newPassword)) {
       setNewPasswordError('Hasło nie może zawierać spacji.');
       error = true;

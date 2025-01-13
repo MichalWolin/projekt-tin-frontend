@@ -67,6 +67,11 @@ function AddTournament() {
       error = true;
     }
 
+    if (/\s/.test(name)) {
+      setNameError("Nazwa turnieju nie może zawierać spacji.");
+      error = true;
+    }
+
     if (!startDate) {
       setStartDateError("Data rozpoczęcia turnieju jest wymagana.");
       error = true;
@@ -74,6 +79,11 @@ function AddTournament() {
 
     if (!endDate) {
       setEndDateError("Data zakończenia turnieju jest wymagana.");
+      error = true;
+    }
+
+    if (/\s/.test(startDate)) {
+      setStartDateError("Data rozpoczęcia turnieju nie może zawierać spacji.");
       error = true;
     }
 
