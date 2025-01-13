@@ -1,12 +1,22 @@
 import React, { useEffect, useState } from 'react';
 import { useCookies } from 'react-cookie';
-import { useParams } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
 
 function Profile() {
-  // const [cookies] = useCookies(['user']);
+  const [cookies] = useCookies(['user']);
   const { id } = useParams();
   const [errorMessage, setErrorMessage] = useState('');
   const [playerData, setPlayerData] = useState(null);
+  const navigate = useNavigate();
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    if (!loading) {
+      if (!cookies.user || cookies.user.role !== "player" || cookies.user.id != id) {
+        navigate("/");
+      }
+    }
+  }, [cookies.user, cookies.user.id, loading]);
 
   useEffect(() => {
     fetch(`http://localhost:3000/players/profile/${id}`, {
@@ -17,15 +27,18 @@ function Profile() {
         return response.json();
       } else if (response.status === 404) {
         setErrorMessage("Użytkownik o podanym id nie istnieje lub nie jest graczem.");
+        setLoading(false);
         return null;
       } else {
         setErrorMessage("Wystąpił nieoczekiwany błąd.");
+        setLoading(false);
         return null;
       }
     })
     .then((data) => {
       if (data) {
         setPlayerData(data.user[0]);
+        setLoading(false);
       }
     })
     .catch((error) => {
@@ -42,6 +55,14 @@ function Profile() {
     const year = dateObj.getFullYear();
     return `${day}.${month}.${year}`;
   };
+
+  if (loading) {
+    return (
+      <div className="div-align">
+        <h2>Wczytywanie...</h2>
+      </div>
+    );
+  }
   
   return (
     <div className="div-align">
