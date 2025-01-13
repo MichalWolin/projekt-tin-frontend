@@ -85,7 +85,7 @@ function ChangePassword() {
       return;
     }
 
-    fetch(`http://localhost:3000/users/password`, {
+    fetch(`http://localhost:3000/users/password/${cookies.user.id}`, {
       method: "PUT",
       headers: {
         "Content-Type": "application/json"

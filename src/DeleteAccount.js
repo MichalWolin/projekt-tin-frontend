@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useCookies } from 'react-cookie';
 import { useNavigate } from 'react-router-dom';
 
@@ -8,18 +8,31 @@ function DeleteAccount() {
   const [successMessage, setSuccessMessage] = useState('');
   const navigate = useNavigate();
 
+  useEffect(() => {
+    if (!cookies.user || (cookies.user.role !== "manager" && cookies.user.role !== "player")) {
+      navigate("/");
+    }
+  }, [cookies.user]);
+
   const handleSubmit = (event) => {
+    event.preventDefault();
     setErrorMessage('');
     setSuccessMessage('');
-    event.preventDefault();
+
     fetch(`http://localhost:3000/users/${cookies.user.id}`, {
-      method: "DELETE"
+      method: "DELETE",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({
+        "user_id": cookies.user.id
+      })
     })
     .then(response => {
       if (response.status === 200) {
         setSuccessMessage('Konto zostało usunięte.');
-        removeCookie('user', { path: '/' });
         setTimeout(() => {
+          removeCookie('user', { path: '/' });
           navigate('/');
         }, 5000);
       } else {
