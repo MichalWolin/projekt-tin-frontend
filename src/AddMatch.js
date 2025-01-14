@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { useCookies } from 'react-cookie';
 import { useParams, useNavigate } from 'react-router-dom';
+import pl from './locales/pl.json';
+import en from './locales/en.json';
 
 function AddMatch() {
   const { id } = useParams();
@@ -19,6 +21,7 @@ function AddMatch() {
   const [player1Error, setPlayer1Error] = useState('');
   const [player2Error, setPlayer2Error] = useState('');
   const [dateError, setDateError] = useState('');
+  const translations = cookies.user && cookies.user.language === 'polish' ? pl : en;
 
   useEffect(() => {
     if (!loading) {
@@ -36,7 +39,7 @@ function AddMatch() {
       if (response.status === 200) {
         return response.json();
       } else {
-        setErrorMessage("Wystąpił nieoczekiwany błąd.");
+        setErrorMessage(translations.unexpected_error);
         setLoading(false);
         return null;
       }
@@ -51,7 +54,7 @@ function AddMatch() {
     })
     .catch((error) => {
       console.log(error);
-      setErrorMessage('Błąd połączenia z serwerem.');
+      setErrorMessage(translations.connection_error);
       setLoading(false);
     });
   }, [id]);
@@ -64,7 +67,7 @@ function AddMatch() {
       if (response.status === 200) {
         return response.json();
       } else {
-        setErrorMessage("Wystąpił nieoczekiwany błąd.");
+        setErrorMessage(translations.unexpected_error);
         return null;
       }
     })
@@ -75,7 +78,7 @@ function AddMatch() {
     })
     .catch((error) => {
       console.log(error);
-      setErrorMessage('Błąd połączenia z serwerem.');
+      setErrorMessage(translations.connection_error);
     });
   }, [id]);
 
@@ -109,23 +112,23 @@ function AddMatch() {
     let error = false;
 
     if (player1 === player2) {
-      setPlayer1Error("Zawodnicy muszą być różni.");
-      setPlayer2Error("Zawodnicy muszą być różni.");
+      setPlayer1Error(translations.different_players);
+      setPlayer2Error(translations.different_players);
       error = true;
     }
 
     if (!player1 || player1 === "0") {
-      setPlayer1Error("Zawodnik 1 jest wymagany.");
+      setPlayer1Error(translations.player_1_required);
       error = true;
     }
 
     if (!player2 || player2 === "0") {
-      setPlayer2Error("Zawodnik 2 jest wymagany.");
+      setPlayer2Error(translations.player_2_required);
       error = true;
     }
 
     if (!date) {
-      setDateError("Data meczu jest wymagana.");
+      setDateError(translations.match_date_required);
       error = true;
     }
 
@@ -134,7 +137,7 @@ function AddMatch() {
     const tournamentEndDateObj = new Date(tournamentEndDate);
 
     if (selectedDate < tournamentStartDateObj || selectedDate > tournamentEndDateObj) {
-      setDateError(`Data meczu musi być pomiędzy ${formatDate(tournamentStartDate)} a ${formatDate(tournamentEndDate)}.`);
+      setDateError(`${translations.match_date_invalid} ${formatDate(tournamentStartDate)} - ${formatDate(tournamentEndDate)}.`);
       error = true;
     }
 
@@ -156,7 +159,7 @@ function AddMatch() {
     })
     .then(response => {
       if (response.status === 201) {
-        setSuccessMessage("Pomyślnie dodano mecz.");
+        setSuccessMessage(translations.add_match_success);
         setPlayer1('');
         setPlayer2('');
         setDate('');
@@ -164,19 +167,19 @@ function AddMatch() {
           setSuccessMessage('');
         }, 5000);
       } else {
-        setErrorMessage("Wystąpił nieoczekiwany błąd.");
+        setErrorMessage(translations.unexpected_error);
       }
     })
     .catch((error) => {
       console.log(error);
-      setErrorMessage("Błąd połączenia z serwerem.");
+      setErrorMessage(translations.connection_error);
     });
   };
 
   if (loading) {
     return (
       <div className="div-align">
-        <h2>Wczytywanie...</h2>
+        <h2>{translations.loading}</h2>
       </div>
     );
   }
@@ -191,11 +194,11 @@ function AddMatch() {
 
   return (
     <div className="div-align">
-      <h2>Dodawanie meczu</h2>
+      <h2>{translations.adding_match}</h2>
       <form>
-        <label>Zawodnik 1</label>
+        <label>{translations.player_1}</label>
         <select value={player1} onChange={handlePlayer1Change}>
-          <option value="0">Wybierz zawodnika</option>
+          <option value="0">{translations.choose_player}</option>
           {players && 
             players.filter(player => player.id != player2)
             .map(player => (
@@ -204,9 +207,9 @@ function AddMatch() {
           }
         </select>
         <p className="error-message">{player1Error}</p>
-        <label>Zawodnik 2</label>
+        <label>{translations.player_2}</label>
         <select value={player2} onChange={handlePlayer2Change}>
-          <option value="0">Wybierz zawodnika</option>
+          <option value="0">{translations.choose_player}</option>
           {players && 
             players.filter(player => player.id != player1)
             .map(player => (
@@ -215,10 +218,10 @@ function AddMatch() {
           }
         </select>
         <p className="error-message">{player2Error}</p>
-        <label>Data meczu</label>
+        <label>{translations.match_date}</label>
         <input type="date" value={formatDate(date)} onChange={handleDateChange} />
         <p className="error-message">{dateError}</p>
-        <button className="form-button" onClick={handleSubmit}>Dodaj mecz</button>
+        <button className="form-button" onClick={handleSubmit}>{translations.add_match}</button>
       </form>
       <p className="success-message">{successMessage}</p>
     </div>

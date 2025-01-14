@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { useCookies } from 'react-cookie';
+import pl from './locales/pl.json';
+import en from './locales/en.json';
 
 function EditTournament() {
   const { id } = useParams();
@@ -14,6 +16,7 @@ function EditTournament() {
   const [nameError, setNameError] = useState('');
   const [startDateError, setStartDateError] = useState('');
   const [endDateError, setEndDateError] = useState('');
+  const translations = cookies.user && cookies.user.language === 'polish' ? pl : en;
 
   useEffect(() => {
     fetch(`http://localhost:3000/tournaments/${id}`, {
@@ -23,10 +26,10 @@ function EditTournament() {
       if (response.status === 200) {
         return response.json();
       } else if (response.status === 404) {
-        setErrorMessage("Turniej o podanym id nie istnieje.");
+        setErrorMessage(translations.tournament_doesnt_exist);
         return null;
       } else {
-        setErrorMessage("Wystąpił nieoczekiwany błąd.");
+        setErrorMessage(translations.unexpected_error);
         return null;
       }
     })
@@ -40,7 +43,7 @@ function EditTournament() {
     })
     .catch((error) => {
       console.log(error);
-      setErrorMessage("Błąd połączenia z serwerem.")
+      setErrorMessage(translations.connection_error);
     });
   }, [id]);
 
@@ -75,32 +78,32 @@ function EditTournament() {
     let error = false;
 
     if (name.length < 3) {
-      setNameError("Nazwa turnieju musi zawierać co najmniej 3 znaki.");
+      setNameError(translations.tournament_name_too_short);
       error = true;
     }
 
     if (name.length > 255) {
-      setNameError("Nazwa turnieju nie może zawierać więcej niż 255 znaków.");
+      setNameError(translations.tournament_name_too_long);
       error = true;
     }
 
     if (/\s/.test(name)) {
-      setNameError("Nazwa turnieju nie może zawierać spacji.");
+      setNameError(translations.tournament_name_no_spaces);
       error = true;
     }
 
     if (!startDate) {
-      setStartDateError("Data rozpoczęcia turnieju jest wymagana.");
+      setStartDateError(translations.start_date_required);
       error = true;
     }
 
     if (!endDate) {
-      setEndDateError("Data zakończenia turnieju jest wymagana.");
+      setEndDateError(translations.end_date_required);
       error = true;
     }
 
     if (/\s/.test(startDate)) {
-      setStartDateError("Data rozpoczęcia turnieju nie może zawierać spacji.");
+      setStartDateError(translations.start_date_no_spaces);
       error = true;
     }
 
@@ -108,22 +111,22 @@ function EditTournament() {
     const endDateObj = new Date(endDate);
 
     if (startDateObj < new Date()) {
-      setStartDateError("Data rozpoczęcia turnieju nie może być w przeszłości.");
+      setStartDateError(translations.start_date_not_past);
       error = true;
     }
 
     if (startDateObj > endDateObj) {
-      setEndDateError("Data zakończenia turnieju nie może być wcześniejsza niż data rozpoczęcia.");
+      setEndDateError(translations.end_date_before_start_date);
       error = true;
     }
 
     if (endDateObj - startDateObj < 24 * 60 * 60 * 1000) {
-      setEndDateError("Turniej musi trwać co najmniej 1 dzień.");
+      setEndDateError(translations.tournament_min_duration);
       error = true;
     }
 
     if (endDateObj - startDateObj > 24 * 60 * 60 * 1000 * 14) {
-      setEndDateError("Turniej nie może trwać dłużej niż 14 dni.");
+      setEndDateError(translations.tournament_max_duration);
       error = true;
     }
 
@@ -145,14 +148,14 @@ function EditTournament() {
     })
     .then(response => {
       if (response.status === 200) {
-        setSuccessMessage("Pomyślnie zaktualizowane dane.");
+        setSuccessMessage(translations.tournament_edit_success);
       } else {
-        setErrorMessage("Wystąpił nieoczekiwany błąd.");
+        setErrorMessage(translations.unexpected_error);
       }
     })
     .catch((error) => {
       console.log(error);
-      setErrorMessage("Błąd połączenia z serwerem.")
+      setErrorMessage(translations.connection_error);
     });
   };
 
@@ -160,24 +163,24 @@ function EditTournament() {
     <div className="div-align">
       {cookies.user && cookies.user.id === managerId ? (
         <>
-          <h2>Edytuj turniej</h2>
+          <h2>{translations.edit_tournament}</h2>
           <form>
-            <label>Nazwa turnieju</label>
-            <input type="text" placeholder="Nazwa turnieju" value={name} onChange={handleNameChange} />
+            <label>{translations.tournament_name}</label>
+            <input type="text" value={name} onChange={handleNameChange} />
             <p className="error-message">{nameError}</p>
-            <label>Data rozpoczęcia</label>
+            <label>{translations.start_date}</label>
             <input type="date" value={formatDate(startDate)} onChange={handleStartDateChange} />
             <p className="error-message">{startDateError}</p>
-            <label>Data zakończenia</label>
+            <label>{translations.end_date}</label>
             <input type="date" value={formatDate(endDate)} onChange={handleEndDateChange} />
             <p className="error-message">{endDateError}</p>
-            <button className="form-button" onClick={handleSubmit}>Zapisz zmiany</button>
+            <button className="form-button" onClick={handleSubmit}>{translations.save}</button>
             <p className="error-message">{errorMessage}</p>
             <p className="success-message">{successMessage}</p>
           </form>
         </>
       ) : (
-        <p className='error-message'>Nie masz uprawnień do edycji tego turnieju.</p>
+        <p className='error-message'>{translations.no_permission_edit_tournament}</p>
       )}
     </div>
   );

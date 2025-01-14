@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useCookies } from 'react-cookie';
+import pl from './locales/pl.json';
+import en from './locales/en.json';
 
 function EditMatch() {
   const { id } = useParams();
@@ -26,6 +28,7 @@ function EditMatch() {
   const [set1Error, setSet1Error] = useState('');
   const [set2Error, setSet2Error] = useState('');
   const [set3Error, setSet3Error] = useState('');
+  const translations = cookies.user && cookies.user.language === 'polish' ? pl : en;
 
   useEffect(() => {
     if (!loading) {
@@ -76,7 +79,7 @@ function EditMatch() {
       if (response.status === 200) {
         return response.json();
       } else {
-        setErrorMessage("Wystąpił nieoczekiwany błąd.");
+        setErrorMessage(translations.unexpected_error);
         return null;
       }
     })
@@ -100,7 +103,7 @@ function EditMatch() {
     })
     .catch((error) => {
       console.log(error);
-      setErrorMessage('Błąd połączenia z serwerem.');
+      setErrorMessage(translations.connection_error);
     });
   }, [id]);
 
@@ -112,7 +115,7 @@ function EditMatch() {
       if (response.status === 200) {
         return response.json();
       } else {
-        setErrorMessage("Wystąpił nieoczekiwany błąd.");
+        setErrorMessage(translations.unexpected_error);
         setLoading(false);
         return null;
       }
@@ -126,7 +129,7 @@ function EditMatch() {
     })
     .catch((error) => {
       console.log(error);
-      setErrorMessage('Błąd połączenia z serwerem.');
+      setErrorMessage(translations.connection_error);
       setLoading(false);
     });
   }, [tournamentId]);
@@ -140,7 +143,7 @@ function EditMatch() {
         if (response.status === 200) {
           return response.json();
         } else {
-          setErrorMessage("Wystąpił nieoczekiwany błąd.");
+          setErrorMessage(translations.unexpected_error);
           return null;
         }
       })
@@ -151,7 +154,7 @@ function EditMatch() {
       })
       .catch((error) => {
         console.log(error);
-        setErrorMessage('Błąd połączenia z serwerem.');
+        setErrorMessage(translations.connection_error);
       });
     }
   }, [tournamentId]);
@@ -164,7 +167,7 @@ function EditMatch() {
 
   const validateSetScore = (set, setError) => {
     if (!/^[0-7]:[0-7]$/.test(set)) {
-      setError("Niepoprawny format setu.");
+      setError(translations.invalid_set_format);
       return false;
     }
 
@@ -177,7 +180,7 @@ function EditMatch() {
       return true;
     }
 
-    setError("Niepoprawny wynik setu.");
+    setError(translations.invalid_set_score);
     return false;
   };
 
@@ -194,23 +197,23 @@ function EditMatch() {
     let error = false;
 
     if (player1 === player2) {
-      setPlayer1Error("Zawodnicy muszą być różni.");
-      setPlayer2Error("Zawodnicy muszą być różni.");
+      setPlayer1Error(translations.different_players);
+      setPlayer2Error(translations.different_players);
       error = true;
     }
 
     if (!player1 || player1 === "0") {
-      setPlayer1Error("Zawodnik 1 jest wymagany.");
+      setPlayer1Error(translations.player_1_required);
       error = true;
     }
 
     if (!player2 || player2 === "0") {
-      setPlayer2Error("Zawodnik 2 jest wymagany.");
+      setPlayer2Error(translations.player_2_required);
       error = true;
     }
 
     if (!date) {
-      setDateError("Data meczu jest wymagana.");
+      setDateError(translations.match_date_required);
       error = true;
     }
 
@@ -219,7 +222,7 @@ function EditMatch() {
     const tournamentEndDateObj = new Date(tournamentEndDate);
 
     if (selectedDate < tournamentStartDateObj || selectedDate > tournamentEndDateObj) {
-      setDateError(`Data meczu musi być pomiędzy ${formatDate(tournamentStartDate)} a ${formatDate(tournamentEndDate)}.`);
+      setDateError(`${translations.match_date_invalid} ${formatDate(tournamentStartDate)} - ${formatDate(tournamentEndDate)}.`);
       error = true;
     }
 
@@ -235,7 +238,7 @@ function EditMatch() {
     const [set2Player1, set2Player2] = set2.split(":");
     if ((set1Player1 > set1Player2 && set2Player1 > set2Player2) || set1Player1 < set1Player2 && set2Player1 < set2Player2) {
       if (set3) {
-        setSet3Error("Trzeci set jest niedozwolony.");
+        setSet3Error(translations.third_set);
         error = true;
       }
     } else {
@@ -265,21 +268,21 @@ function EditMatch() {
     })
     .then(response => {
       if (response.status === 200) {
-        setSuccessMessage("Mecz został zaktualizowany.");
+        setSuccessMessage(translations.update_match_success);
       } else {
-        setErrorMessage("Wystąpił nieoczekiwany błąd.");
+        setErrorMessage(translations.unexpected_error);
       }
     })
     .catch((error) => {
       console.log(error);
-      setErrorMessage("Błąd połączenia z serwerem.");
+      setErrorMessage(translations.connection_error);
     });
   };
 
   if (loading) {
     return (
       <div className="div-align">
-        <h2>Wczytywanie...</h2>
+        <h2>{translations.loading}</h2>
       </div>
     );
   }
@@ -294,11 +297,11 @@ function EditMatch() {
 
   return (
     <div className="div-align">
-      <h2>Edytuj mecz</h2>
+      <h2>{translations.edit_match}</h2>
       <form>
-        <label>Zawodnik 1</label>
+        <label>{translations.player_1}</label>
         <select value={player1} onChange={handlePlayer1Change}>
-          <option value="0">Wybierz zawodnika</option>
+          <option value="0">{translations.choose_player}</option>
           {players && 
             players.filter(player => player.id != player2)
             .map(player => (
@@ -307,9 +310,9 @@ function EditMatch() {
           }
         </select>
         <p className="error-message">{player1Error}</p>
-        <label>Zawodnik 2</label>
+        <label>{translations.player_2}</label>
         <select value={player2} onChange={handlePlayer2Change}>
-          <option value="0">Wybierz zawodnika</option>
+          <option value="0">{translations.choose_player}</option>
           {players && 
             players.filter(player => player.id != player1)
             .map(player => (
@@ -318,7 +321,7 @@ function EditMatch() {
           }
         </select>
         <p className="error-message">{player2Error}</p>
-        <label>Data meczu</label>
+        <label>{translations.match_date}</label>
         <input type="date" value={formatDate(date)} onChange={handleDateChange} />
         <p className="error-message">{dateError}</p>
         <label>Set 1</label>
@@ -330,7 +333,7 @@ function EditMatch() {
         <label>Set 3</label>
         <input type="text" value={set3} onChange={handleSet3Change} placeholder="0:0" />
         <p className="error-message">{set3Error}</p>
-        <button className="form-button" onClick={handleSubmit}>Zapisz zmiany</button>
+        <button className="form-button" onClick={handleSubmit}>{translations.save}</button>
       </form>
       <p className="error-message">{errorMessage}</p>
       <p className="success-message">{successMessage}</p>

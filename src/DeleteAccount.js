@@ -1,12 +1,15 @@
 import React, { useState, useEffect } from 'react';
 import { useCookies } from 'react-cookie';
 import { useNavigate } from 'react-router-dom';
+import pl from './locales/pl.json';
+import en from './locales/en.json';
 
 function DeleteAccount() {
   const [cookies, setCookie, removeCookie] = useCookies(['user']);
   const [errorMessage, setErrorMessage] = useState('');
   const [successMessage, setSuccessMessage] = useState('');
   const navigate = useNavigate();
+  const translations = cookies.user && cookies.user.language === 'polish' ? pl : en;
 
   useEffect(() => {
     if (!cookies.user || (cookies.user.role !== "manager" && cookies.user.role !== "player")) {
@@ -30,26 +33,26 @@ function DeleteAccount() {
     })
     .then(response => {
       if (response.status === 200) {
-        setSuccessMessage('Konto zostało usunięte.');
+        setSuccessMessage(translations.account_deleted);
         setTimeout(() => {
           removeCookie('user', { path: '/' });
           navigate('/');
         }, 5000);
       } else {
-        setErrorMessage('Wystąpił nieoczekiwany błąd.');
+        setErrorMessage(translations.unexpected_error);
       }
     })
     .catch((error) => {
       console.log(error);
-      setErrorMessage('Błąd połączenia z serwerem.');
+      setErrorMessage(translations.connection_error);
     });
   };
 
   return (
     <div className="div-align">
-      <h2>Czy na pewno chcesz usunąć konto?</h2>
-      <p className="error-message">Uwaga! Operacja jest nieodwracalna.</p>
-      <button className="form-button" onClick={handleSubmit}>Usuń konto</button>
+      <h2>{translations.are_you_sure}</h2>
+      <p className="error-message">{translations.irreversible}</p>
+      <button className="form-button" onClick={handleSubmit}>{translations.delete_account}</button>
       <p className="error-message">{errorMessage}</p>
       <p className="success-message">{successMessage}</p>
     </div>

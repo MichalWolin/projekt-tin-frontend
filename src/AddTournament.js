@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import { useCookies } from 'react-cookie';
 import { useNavigate } from 'react-router-dom';
+import pl from './locales/pl.json';
+import en from './locales/en.json';
 
 function AddTournament() {
   const [cookies] = useCookies(['user']);
@@ -15,6 +17,7 @@ function AddTournament() {
   const [startDateError, setStartDateError] = useState('');
   const [endDateError, setEndDateError] = useState('');
   const [genderError, setGenderError] = useState('');
+  const translations = cookies.user && cookies.user.language === 'polish' ? pl : en;
 
   useEffect(() => {
     if (!cookies.user || cookies.user.role !== "manager") {
@@ -58,32 +61,32 @@ function AddTournament() {
     let error = false;
 
     if (name.length < 3) {
-      setNameError("Nazwa turnieju musi zawierać co najmniej 3 znaki.");
+      setNameError(translations.tournament_name_too_short);
       error = true;
     }
 
     if (name.length > 255) {
-      setNameError("Nazwa turnieju nie może zawierać więcej niż 255 znaków.");
+      setNameError(translations.tournament_name_too_long);
       error = true;
     }
 
     if (/\s/.test(name)) {
-      setNameError("Nazwa turnieju nie może zawierać spacji.");
+      setNameError(translations.tournament_name_no_spaces);
       error = true;
     }
 
     if (!startDate) {
-      setStartDateError("Data rozpoczęcia turnieju jest wymagana.");
+      setStartDateError(translations.start_date_required);
       error = true;
     }
 
     if (!endDate) {
-      setEndDateError("Data zakończenia turnieju jest wymagana.");
+      setEndDateError(translations.end_date_required);
       error = true;
     }
 
     if (/\s/.test(startDate)) {
-      setStartDateError("Data rozpoczęcia turnieju nie może zawierać spacji.");
+      setStartDateError(translations.start_date_no_spaces);
       error = true;
     }
 
@@ -91,27 +94,27 @@ function AddTournament() {
     const endDateObj = new Date(endDate);
 
     if (startDateObj < new Date()) {
-      setStartDateError("Data rozpoczęcia turnieju nie może być w przeszłości.");
+      setStartDateError(translations.start_date_not_past);
       error = true;
     }
 
     if (startDateObj > endDateObj) {
-      setEndDateError("Data zakończenia turnieju nie może być wcześniejsza niż data rozpoczęcia.");
+      setEndDateError(translations.end_date_before_start_date);
       error = true;
     }
 
     if (endDateObj - startDateObj < 24 * 60 * 60 * 1000) {
-      setEndDateError("Turniej musi trwać co najmniej 1 dzień.");
+      setEndDateError(translations.tournament_min_duration);
       error = true;
     }
 
     if (endDateObj - startDateObj > 24 * 60 * 60 * 1000 * 14) {
-      setEndDateError("Turniej nie może trwać dłużej niż 14 dni.");
+      setEndDateError(translations.tournament_max_duration);
       error = true;
     }
 
     if (gender !== "male" && gender !== "female") {
-      setGenderError("Nieprawidłowa płeć.");
+      setGenderError(translations.wrong_gender);
       error = true;
     }
 
@@ -134,7 +137,7 @@ function AddTournament() {
     })
     .then(response => {
       if (response.status === 201) {
-        setSuccessMessage("Pomyślnie dodano turniej.");
+        setSuccessMessage(translations.add_tournament_success);
         setName('');
         setStartDate('');
         setEndDate('');
@@ -143,35 +146,35 @@ function AddTournament() {
           setSuccessMessage('');
         }, 5000);
       } else {
-        setErrorMessage("Wystąpił nieoczekiwany błąd.");
+        setErrorMessage(translations.unexpected_error);
       }
     })
     .catch((error) => {
       console.log(error);
-      setErrorMessage("Błąd połączenia z serwerem.");
+      setErrorMessage(translations.connection_error);
     });
   };
 
   return (
     <div className="div-align">
-      <h2>Dodawanie nowego turnieju</h2>
+      <h2>{translations.adding_tournament}</h2>
       <form>
-        <label>Nazwa turnieju</label>
-        <input type="text" placeholder="Nazwa turnieju" value={name} onChange={handleNameChange} />
+        <label>{translations.tournament_name}</label>
+        <input type="text" value={name} onChange={handleNameChange} />
         <p className="error-message">{nameError}</p>
-        <label>Data rozpoczęcia</label>
+        <label>{translations.start_date}</label>
         <input type="date" value={formatDate(startDate)} onChange={handleStartDateChange} />
         <p className="error-message">{startDateError}</p>
-        <label>Data zakończenia</label>
+        <label>{translations.end_date}</label>
         <input type="date" value={formatDate(endDate)} onChange={handleEndDateChange} />
         <p className="error-message">{endDateError}</p>
-        <label>Płeć</label>
+        <label>{translations.gender}</label>
         <select name="gender" onChange={handleGenderChange}>
-          <option value="male">Mężczyzna</option>
-          <option value="female">Kobieta</option>
+          <option value="male">{translations.man}</option>
+          <option value="female">{translations.woman}</option>
         </select>
         <p className="error-message">{genderError}</p>
-        <button className="form-button" onClick={handleSubmit}>Dodaj turniej</button>
+        <button className="form-button" onClick={handleSubmit}>{translations.add_tournament}</button>
         <p className="error-message">{errorMessage}</p>
         <p className="success-message">{successMessage}</p>
       </form>
