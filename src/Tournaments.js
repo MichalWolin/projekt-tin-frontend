@@ -29,7 +29,7 @@ function Tournaments() {
         setHasNextPage(data.hasNextPage);
       } 
       if (data.tournaments.length === 0) {
-        setErrorMessage("Brak nadcelse nadchodzących turniejów.");
+        setErrorMessage("Brak nadchodzących turniejów.");
       }
     })
     .catch((error) => {
